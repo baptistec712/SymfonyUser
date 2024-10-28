@@ -15,7 +15,7 @@ $('#utilisateur').DataTable();
 			<h1 class="display-4">Liste des utilisateurs</h1>
 			<p class="lead">Voici la liste des utilisateurs enregistrés dans notre base de données.</p>
 			<p class="lead">
-				<a class="btn btn-primary btn-lg" href="{{ path('home.index') }}" role="button">Accueil</a>
+				<a class="btn btn-primary btn-lg" href="{{ path('app_index') }}" role="button">Accueil</a>
 			</p>
 			<!-- Bouton pour ajouter un utilisateur -->
 			<a href="{{ path('app_user_new') }}" class="btn btn-success">Ajouter un utilisateur</a>
@@ -27,7 +27,6 @@ $('#utilisateur').DataTable();
 			<thead>
 				<tr>
 					<th>Nom</th>
-					<th>Mot de passe</th>
 					<th>Role</th>
 					<th>Actions</th>
 				</tr>
@@ -36,7 +35,6 @@ $('#utilisateur').DataTable();
 				{% for user in users %}
 					<tr>
 						<td>{{ user.nom }}</td>
-						<td>{{ user.password }}</td>
 						<td>{{ user.getRole() ? 'Administrateur' : 'Utilisateur standard' }}</td>
 						<!-- Utiliser getRole() -->
 						<td>
