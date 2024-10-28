@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs
+{% endblock %}
+
+{% block body %}
+	<script>
+		$(document).ready(function () {
+$('#utilisateur').DataTable();
+});
+	</script>
+
+	<div class="container mt-4">
+		<div class="jumbotron">
+			<h1 class="display-4">Liste des utilisateurs</h1>
+			<p class="lead">Voici la liste des utilisateurs enregistrés dans notre base de données.</p>
+			<p class="lead">
+				<a class="btn btn-primary btn-lg" href="{{ path('home.index') }}" role="button">Accueil</a>
+			</p>
+			<!-- Bouton pour ajouter un utilisateur -->
+			<a href="{{ path('app_user_new') }}" class="btn btn-success">Ajouter un utilisateur</a>
+		</div>
+	</div>
+
+	<div class='container mt-4'>
+		<table id="utilisateur" class="table table-striped" style="width:100%">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Mot de passe</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+					<tr>
+						<td>{{ user.nom }}</td>
+						<td>{{ user.password }}</td>
+
+						<td>
+							<!-- Lien vers l'édition de l'utilisateur -->
+							<a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn btn-warning">Modifier</a>
+
+							<!-- Formulaire pour la suppression de l'utilisateur -->
+							<form action="{{ path('app_user_delete', {id: user.id}) }}" method="post" style="display:inline;">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+								<button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+									Supprimer
+								</button>
+							</form>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">Aucun utilisateur trouvé.</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
