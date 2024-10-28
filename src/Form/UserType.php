@@ -5,9 +5,10 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
@@ -15,12 +16,17 @@ class UserType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'nom'
+                'label' => 'Nom'
             ])
             ->add('password', PasswordType::class, [
                 'mapped' => false, // Ne pas lier ce champ directement à l'entité User
-                'required' => false, // Facultatif si l'utilisateur ne souhaite pas modifier le mot de passe
+                'required' => false,
                 'label' => 'Nouveau mot de passe',
+            ])
+            ->add('role', CheckboxType::class, [
+                'label' => 'Administrateur',
+                'required' => false, // Facultatif
+                'mapped' => true, // Ne pas lier ce champ directement à l'entité User
             ]);
     }
 

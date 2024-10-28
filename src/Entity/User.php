@@ -21,15 +21,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $nom = null;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
+    // Propriété pour indiquer si l'utilisateur est admin
+    #[ORM\Column(type: 'boolean')]
+    private bool $role = false; // false pour utilisateur standard, true pour admin
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -50,43 +45,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->nom;
     }
 
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
+    // Retourne le rôle sous forme de tableau
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->role ? ['ROLE_ADMIN'] : ['ROLE_USER'];
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function getRole(): bool
     {
-        $this->roles = $roles;
+        return $this->role; // Getter pour le rôle
+    }
+
+    public function setRole(bool $role): static
+    {
+        $this->role = $role; // Setter pour le rôle
 
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -99,12 +80,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Si tu stockes des données sensibles temporaires, efface-les ici
     }
 }

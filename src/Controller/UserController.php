@@ -34,6 +34,12 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Récupérer la valeur de la case à cocher pour le rôle
+            $role = $form->get('role')->getData();
+            $user->setRole($role); // Met à jour le champ role dans l'entité User
+
+
             $password = $form->get('password')->getData();
 
             // Vérifier si un nouveau mot de passe est saisi
