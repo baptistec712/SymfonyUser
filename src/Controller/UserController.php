@@ -7,15 +7,19 @@ use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security as SecurityBundleSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Csrf\CsrfToken; // Import the CsrfToken class
+use Symfony\Component\Security\Core\Security; // Import de Security
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 class UserController extends AbstractController
 {
+
     #[Route('/users', name: 'app_users')]
     public function index(UserRepository $userRepository): Response
     {
@@ -28,26 +32,33 @@ class UserController extends AbstractController
     #[Route('/users/{id}/edit', name: 'app_user_edit')]
     public function edit(User $user, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        /** @var App/Entity/User $loggedUser */
+        $loggedUser = $this->getUser();
+        $loggedUserId = $loggedUser->getId();
+        $loggedUserRole = $loggedUser->getRoles();
+
         // Créer le formulaire
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($loggedUserRole == "ROLE_ADMIN") {
+                if ($user->getId() != $loggedUserId) {
 
-            // Récupérer la valeur de la case à cocher pour le rôle
-            $role = $form->get('role')->getData();
-            $user->setRole($role); // Met à jour le champ role dans l'entité User
+                    // Récupérer la valeur de la case à cocher pour le rôle
+                    $roles = $form->get('roles')->getData();
+                    $user->setRoles($roles); // Met à jour le champ role dans l'entité User
+                }
 
+                $password = $form->get('password')->getData();
 
-            $password = $form->get('password')->getData();
-
-            // Vérifier si un nouveau mot de passe est saisi
-            if ($password) {
-                // Encode et met à jour le mot de passe de l'utilisateur
-                $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+                // Vérifier si un nouveau mot de passe est saisi
+                if ($password) {
+                    // Encode et met à jour le mot de passe de l'utilisateur
+                    $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+                }
             }
-
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -64,6 +75,7 @@ class UserController extends AbstractController
     #[Route('/users/{id}/delete', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+
         //pas compris il faut que je me renseigne
         $submittedToken = $request->request->get('_token');
         if ($csrfTokenManager->isTokenValid(new CsrfToken('delete' . $user->getId(), $submittedToken))) {
@@ -83,7 +95,7 @@ class UserController extends AbstractController
     {
         // Créer une nouvelle instance de l'entité User
         $user = new User();
-
+        $user->setUser();
         // Créer un formulaire lié à l'entité User
         $form = $this->createForm(UserType::class, $user);
 

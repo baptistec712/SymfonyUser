@@ -1,4 +1,5 @@
 import './bootstrap.js';
+import './fr-FR.json';
 /*
  * Welcome to your app's main JavaScript file!
  *
