@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Bactériophages
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des Bactériophages</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nom</th>
+				<th>Espèce</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for bacteriophage in bacteriophages %}
+				<tr>
+					<td>{{ bacteriophage.id }}</td>
+					<td>{{ bacteriophage.nom }}</td>
+					<td>{{ bacteriophage.genre }}</td>
+					<td>
+						<a href="{{ path('app_bacteriophage_edit', {id: bacteriophage.id}) }}" class="btn btn-warning">Modifier</a>
+
+						{# Formulaire de suppression #}
+						<form action="{{ path('app_bacteriophage_delete', {id: bacteriophage.id}) }}" method="post" style="display:inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ bacteriophage.id) }}">
+							<button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce bacteriophage ?');">
+								Supprimer
+							</button>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_bacteriophage_new') }}" class="btn btn-primary">Ajouter un nouveau bacteriophage</a>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Souches
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des Souches</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nom</th>
+				<th>Espèce</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for souche in souches %}
+				<tr>
+					<td>{{ souche.id }}</td>
+					<td>{{ souche.nom }}</td>
+					<td>{{ souche.espece }}</td>
+					<td>
+						<a href="{{ path('app_souche_edit', {id: souche.id}) }}" class="btn btn-warning">Modifier</a>
+
+						{# Formulaire de suppression #}
+						<form action="{{ path('app_souche_delete', {id: souche.id}) }}" method="post" style="display:inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ souche.id) }}">
+							<button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette souche ?');">
+								Supprimer
+							</button>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_souche_new') }}" class="btn btn-primary">Ajouter une nouvelle Souche</a>
+{% endblock %}

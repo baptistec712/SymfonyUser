@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Consortias
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des Consortias</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nom</th>
+				<th>Espèce</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for consortia in consortias %}
+				<tr>
+					<td>{{ consortia.id }}</td>
+					<td>{{ consortia.nom }}</td>
+					<td>{{ consortia.typeFromage }}</td>
+					<td>
+						<a href="{{ path('app_consortia_edit', {id: consortia.id}) }}" class="btn btn-warning">Modifier</a>
+
+						{# Formulaire de suppression #}
+						<form action="{{ path('app_consortia_delete', {id: consortia.id}) }}" method="post" style="display:inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ consortia.id) }}">
+							<button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce consortia ?');">
+								Supprimer
+							</button>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_consortia_new') }}" class="btn btn-primary">Ajouter un nouveau consortia</a>
+{% endblock %}

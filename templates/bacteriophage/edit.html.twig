@@ -1,0 +1,26 @@
+{# templates/souche/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le bacteriophage
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier le bacteriophage:
+		{{ bacteriophage.nom }}</h1>
+
+	{# Affichez un message de succès si le formulaire a été soumis avec succès #}
+	{% if app.session.flashBag.has('success') %}
+		<div class="alert alert-success">
+			{{ app.session.flashBag.get('success')[0] }}
+		</div>
+	{% endif %}
+
+	{# Affichage du formulaire #}
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button class="btn btn-primary">Sauvegarder les modifications</button>
+	{{ form_end(form) }}
+
+	<a href="{{ path('app_bacteriophage') }}" class="btn btn-secondary">Retour à la liste des bacteriophages</a>
+{% endblock %}

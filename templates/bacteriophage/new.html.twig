@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau bacteriophage
+{% endblock %}
+
+{% block body %}
+	<h1>Créer un nouveau bacteriophage</h1>
+
+	{# Affichez un message de succès si le formulaire a été soumis avec succès #}
+	{% if app.session.flashBag.has('success') %}
+		<div class="alert alert-success">
+			{{ app.session.flashBag.get('success')[0] }}
+		</div>
+	{% endif %}
+
+	{# Affichage du formulaire #}
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button class="btn btn-primary">Créer</button>
+	{{ form_end(form) }}
+
+	<a href="{{ path('app_bacteriophage') }}" class="btn btn-secondary">Retour à la liste des bacteriophages</a>
+{% endblock %}
